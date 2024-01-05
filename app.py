@@ -46,17 +46,15 @@ def index():
     # db.session.add(new_contact)
     # db.session.commit()
     #return send_from_directory('frontend', 'index.html')
-    response_data = {
-        'Hello': ['My name is', 'Artyom Talatynnik!', 'This is my demo project', 'Welcome!'],
-        'ENV': 'test',
-        'About me': [
-            '1.5+ years of experience in IT. Self-driven and results-oriented.',
-            'Recently graduated from Belarusian State Technological University with a degree in Information Technology where started my career as a System Administrator.',
-            'Currently serving as a DevOps Intern at Onesoil, where I apply my knowledge and skills in optimizing Software Development processes and Cloud Automation.',
-            'Eager to contribute my expertise and continue learning in a dynamic DevOps environment.',
-            'Well-versed in technologies such as Kubernetes, GitLab, Terraform, AWS, and Linux.',
-        ],
-        'Skills': [
+    response_data = OrderedDict([
+        ('Hello', [
+            'My name is',
+            'Artyom Talatynnik!',
+            'This is my demo project',
+            'Welcome!',
+        ]),
+        ('ENV', 'test'),
+        ('Skills', [
             'DevOps Technologies: Kubernetes, GitLab, Terraform, AWS',
             'Operating Systems: Linux (Ubuntu, CentOS)',
             'Programming Languages: C, C++, C#, Python',
@@ -65,17 +63,20 @@ def index():
             'Version Control: Git, GitLab',
             'CI/CD: Gitlab CI, Jenkins',
             '3D Modeling and Design: Unity, 3ds Max',
-        ],
-        'Education': 'BELARUSIAN STATE TECHNOLOGICAL UNIVERSITY\n'
-                     'Faculty of Information Technology - 2019-2023\n'
-                     "Bachelor's Degree in Information Technology",
-        'Experience': [
-            '2021 - 2022 | System Administrator | Belarussian State Technological University\n'
-            'Set up a network for windows computers to transfer files over FTP protocol and to use RDP connection. Ensuring data security and backup. Manage and record lessons for a variety of IT topics: Cyber Security, Cryptography, Unity Engine, CSS, HTML, JavaScript. Use git for VCS in Adobe Premiere projects, Install and manage OS Windows for video production.',
-            '2023 Jul – Present Time | Junior DevOps | Onesoil\n'
-            'Managing Gitlab CI Pipelines, Setting up Cloudfront Distributions with IaC (Terraform, Terragrunt) and other infrastructure for them, managing Kubernetes cluster, Working with docker images in AWS ECR, creating AWS CloudWatch alarms and other AWS services.',
-        ],
-    }
+        ]),
+        ('Education', "BELARUSIAN STATE TECHNOLOGICAL UNIVERSITY\nFaculty of Information Technology - 2019-2023\nBachelor's Degree in Information Technology"),
+        ('Experience', [
+            "2021 - 2022 | System Administrator | Belarussian State Technological University\nSet up a network for windows computers to transfer files over FTP protocol and to use RDP connection. Ensuring data security and backup. Manage and record lessons for a variety of IT topics: Cyber Security, Cryptography, Unity Engine, CSS, HTML, JavaScript. Use git for VCS in Adobe Premiere projects, Install and manage OS Windows for video production.",
+            "2023 Jul – Present Time | Junior DevOps | Onesoil\nManaging Gitlab CI Pipelines, Setting up Cloudfront Distributions with IaC (Terraform, Terragrunt) and other infrastructure for them, managing Kubernetes cluster, Working with docker images in AWS ECR, creating AWS CloudWatch alarms and other AWS services.",
+        ]),
+        ('About me', [
+            '1.5+ years of experience in IT. Self-driven and results-oriented.',
+            'Recently graduated from Belarusian State Technological University with a degree in Information Technology where started my career as a System Administrator.',
+            'Currently serving as a DevOps Intern at Onesoil, where I apply my knowledge and skills in optimizing Software Development processes and Cloud Automation.',
+            'Eager to contribute my expertise and continue learning in a dynamic DevOps environment.',
+            'Well-versed in technologies such as Kubernetes, GitLab, Terraform, AWS, and Linux.',
+        ]),
+    ])
 
     return jsonify(response_data)
 
