@@ -33,6 +33,11 @@ class ContactInfo(db.Model):
     email = db.Column(db.String(50))
     github = db.Column(db.String(100))
 
+class AboutMe(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    section = db.Column(db.String(50), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+
 def get_or_create_contact(name, email, message):
     contact = Contact.query.filter_by(name=name, email=email).first()
     if not contact:
@@ -50,7 +55,22 @@ class ContactResource(Resource):
 api.add_resource(ContactResource, '/api/contacts')
 
 def init_data():
-   # check if data is set
+    db.create_all()
+    about_me_data = [
+        {'section': 'Hello', 'content': 'My name is\nArtyom Talatynnik!\nThis is my demo project\nWelcome!'},
+        {'section': 'Skills', 'content': 'DevOps Technologies: Kubernetes, GitLab, Terraform, AWS\nOperating Systems: Linux (Ubuntu, CentOS)\nProgramming Languages: C, C++, C#, Python\nWeb Development: HTML, HTML5, JavaScript (JS), jQuery\nDatabases: SQL (MySQL, PostgreSQL, MSSQL, Oracle)\nVersion Control: Git, GitLab\nCI/CD: Gitlab CI, Jenkins\n3D Modeling and Design: Unity, 3ds Max'},
+        {'section': 'Education', 'content': "BELARUSIAN STATE TECHNOLOGICAL UNIVERSITY\nFaculty of Information Technology - 2019-2023\nBachelor's Degree in Information Technology"},
+        {'section': 'Experience', 'content': "2021 - 2022 | System Administrator | Belarussian State Technological University\nSet up a network for windows computers to transfer files over FTP protocol and to use RDP connection. Ensuring data security and backup. Manage and record lessons for a variety of IT topics: Cyber Security, Cryptography, Unity Engine, CSS, HTML, JavaScript. Use git for VCS in Adobe Premiere projects, Install and manage OS Windows for video production.\n2023 Jul – Present Time | Junior DevOps | Onesoil\nManaging Gitlab CI Pipelines, Setting up Cloudfront Distributions with IaC (Terraform, Terragrunt) and other infrastructure for them, managing Kubernetes cluster, Working with docker images in AWS ECR, creating AWS CloudWatch alarms and other AWS services."},
+        {'section': 'About me', 'content': '1.5+ years of experience in IT. Self-driven and results-oriented.\nRecently graduated from Belarusian State Technological University with a degree in Information Technology where started my career as a System Administrator.\nCurrently serving as a DevOps Intern at Onesoil, where I apply my knowledge and skills in optimizing Software Development processes and Cloud Automation.\nEager to contribute my expertise and continue learning in a dynamic DevOps environment.\nWell-versed in technologies such as Kubernetes, GitLab, Terraform, AWS, and Linux.'},
+    ]
+
+    for data in about_me_data:
+        about_me_entry = AboutMe.query.filter_by(section=data['section']).first()
+        if not about_me_entry:
+            about_me_entry = AboutMe(section=data['section'], content=data['content'])
+            db.session.add(about_me_entry)
+            db.session.commit()
+
     if not ContactInfo.query.first():
         contact_info = ContactInfo(
             linkedin='https://www.linkedin.com/in/artyom-talatynnik/',
