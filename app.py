@@ -1,8 +1,9 @@
-from flask import Flask, send_from_directory, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api, Resource
 from collections import OrderedDict
 import os
+
 db_username = os.environ.get('DB_USERNAME')
 db_password = os.environ.get('DB_PASSWORD')
 db_uri = os.environ.get('DB_URI')
@@ -32,6 +33,7 @@ def get_or_create_contact(name, email, message):
         db.session.add(contact)
         db.session.commit()
     return contact
+
 class ContactResource(Resource):
     def get(self):
         contacts = Contact.query.all()
@@ -40,12 +42,20 @@ class ContactResource(Resource):
 
 api.add_resource(ContactResource, '/api/contacts')
 
+def init_data():
+    # Инициализация данных при первом запуске
+    contacts_data = [
+        {'name': 'Artyom Talatynnik', 'email': 'artsyomtalatynnik@gmail.com', 'message': 'Hello, World!'},
+    ]
+    for data in contacts_data:
+        get_or_create_contact(data['name'], data['email'], data['message'])
+
 @app.route('/')
 def index():
-    # new_contact = Contact(name='John Doe', email='john@example.com')
-    # db.session.add(new_contact)
-    # db.session.commit()
-    #return send_from_directory('frontend', 'index.html')
+    init_data()  # Инициализация данных
+    contacts = Contact.query.all()
+    contact_list = [{"id": contact.id, "name": contact.name, "email": contact.email} for contact in contacts]
+
     response_data = OrderedDict([
         ('Hello', [
             'My name is',
@@ -76,19 +86,25 @@ def index():
             'Eager to contribute my expertise and continue learning in a dynamic DevOps environment.',
             'Well-versed in technologies such as Kubernetes, GitLab, Terraform, AWS, and Linux.',
         ]),
+        ('Contacts', contact_list),
     ])
 
     return jsonify(response_data)
 
 @app.route('/contacts')
 def contacts():
+    init_data()  # Инициализация данных
+    contacts = Contact.query.all()
+    contact_list = [{"id": contact.id, "name": contact.name, "email": contact.email} for contact in contacts]
+
     response_data = {
         'My contacts list': {
             'LinkedIn': 'https://www.linkedin.com/in/artyom-talatynnik/',
             'Phone': '+48572072828',
             'Email': 'artsyomtalatynnik@gmail.com',
             'GitHub': 'https://github.com/talatynnikA',
-        }
+        },
+        'Contacts': contact_list,
     }
 
     return jsonify(response_data)
