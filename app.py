@@ -26,6 +26,13 @@ class Contact(db.Model):
     email = db.Column(db.String(50), nullable=False)
     message = db.Column(db.String(100), nullable=False, default='textmsg is not set')
 
+class ContactInfo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    linkedin = db.Column(db.String(100))
+    phone = db.Column(db.String(15))
+    email = db.Column(db.String(50))
+    github = db.Column(db.String(100))
+
 def get_or_create_contact(name, email, message):
     contact = Contact.query.filter_by(name=name, email=email).first()
     if not contact:
@@ -43,12 +50,17 @@ class ContactResource(Resource):
 api.add_resource(ContactResource, '/api/contacts')
 
 def init_data():
-    # Инициализация данных при первом запуске
-    contacts_data = [
-        {'name': 'Artyom Talatynnik', 'email': 'artsyomtalatynnik@gmail.com', 'message': 'Hello, World!'},
-    ]
-    for data in contacts_data:
-        get_or_create_contact(data['name'], data['email'], data['message'])
+   # check if data is set
+    if not ContactInfo.query.first():
+        contact_info = ContactInfo(
+            linkedin='https://www.linkedin.com/in/artyom-talatynnik/',
+            phone='+48572072828',
+            email='artsyomtalatynnik@gmail.com',
+            github='https://github.com/talatynnikA'
+        )
+        db.session.add(contact_info)
+        db.session.commit()
+
 
 @app.route('/')
 def index():
@@ -93,21 +105,21 @@ def index():
 
 @app.route('/contacts')
 def contacts():
-    init_data()  # Инициализация данных
-    contacts = Contact.query.all()
-    contact_list = [{"id": contact.id, "name": contact.name, "email": contact.email} for contact in contacts]
+    init_data()  # data init
+
+    contact_info = ContactInfo.query.first()
 
     response_data = {
         'My contacts list': {
-            'LinkedIn': 'https://www.linkedin.com/in/artyom-talatynnik/',
-            'Phone': '+48572072828',
-            'Email': 'artsyomtalatynnik@gmail.com',
-            'GitHub': 'https://github.com/talatynnikA',
+            'LinkedIn': contact_info.linkedin,
+            'Phone': contact_info.phone,
+            'Email': contact_info.email,
+            'GitHub': contact_info.github,
         },
-        'Contacts': contact_list,
     }
 
     return jsonify(response_data)
+
 
 if __name__ == '__main__':
     with app.app_context():
