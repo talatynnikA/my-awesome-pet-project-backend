@@ -82,6 +82,10 @@ Follow these instructions to get a copy of the project up and running on your lo
 - `/`: Get information about me.
 - `/contacts`: Get contact information.
 
+# Docker build commands
+docker build . -t my-bk:latest --build-arg postgres_user=postgres --build-arg postgres_pass=myPassword --build-arg database_name=project
+
+
 ## Authors
 
 - Artyom Talatynnik

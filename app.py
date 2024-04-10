@@ -3,8 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api, Resource
 from collections import OrderedDict
 from flask_migrate import Migrate
-
-
+from flask import Flask
+from flask_cors import CORS, cross_origin
 
 import os
 
@@ -19,6 +19,7 @@ if None in (db_username, db_password, db_uri):
     raise ValueError("One or more of the database connection parameters are not set.")
 
 app = Flask(__name__, template_folder='templates')
+CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_username}:{db_password}@localhost:5432/{db_uri}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -87,6 +88,7 @@ def init_data():
 
 
 @app.route('/')
+@cross_origin()
 def index():
     init_data()  # data init
     contacts = Contact.query.all()
@@ -110,6 +112,7 @@ def index():
 
 
 @app.route('/contacts')
+@cross_origin()
 def contacts():
     init_data()  # data init
 
